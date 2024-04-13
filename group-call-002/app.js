@@ -2,6 +2,7 @@ import express from "express";
 import { EventsCollection } from "./EventsCollection.js";
 import { UsersCollection } from "./UsersCollection.js";
 import { getTicketsByQuery } from "./getTicketsByQuery.js";
+import { TicketFilters } from "./TicketFilters.js";
 
 const app = express();
 
@@ -10,7 +11,12 @@ app.get("/", (req, res) => {
 });
 
 app.get("/tickets-available", (req, res) => {
-  return res.json(getTicketsByQuery({ ...query, status: "upcoming" }));
+  return res.json(
+    getTicketsByQuery({
+      ...query,
+      [TicketFilters.BY_STATUS.propName]: "upcoming",
+    }),
+  );
 });
 
 app.get("/tickets", (req, res) => {

@@ -14,8 +14,8 @@ export function getTicketsByQuery(query) {
   );
 
   return EventsCollection.find().filter((event) => {
-    return Object.values(TicketFilters).every(({ execute }) =>
-      execute({
+    return Object.values(TicketFilters).every((ticketFilterEnum) =>
+      ticketFilterEnum.execute({
         event,
         user,
         query,

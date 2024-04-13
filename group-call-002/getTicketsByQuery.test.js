@@ -6,7 +6,7 @@ const DATA = [
     input: {
       eventName: "Con",
       quantity: 101,
-      status: "upcoming",
+      eventStatus: "upcoming",
     },
     expected: 0,
   },
