@@ -11,6 +11,7 @@ describe("getTicketsByQuery", () => {
   });
   test(`returns all events with "Con" for VIP User`, () => {
     const events = getTicketsByQuery({
+      quantity: 1,
       userId: 1,
       eventName: "Con",
     });
