@@ -1,4 +1,3 @@
-import { UsersCollection } from "./UsersCollection.js";
 import { EventsCollection } from "./EventsCollection.js";
 import { TicketFilters } from "./TicketFilters.js";
 
@@ -9,15 +8,10 @@ export function getTicketsByQuery(query) {
     }
   });
 
-  const user = UsersCollection.find().find(
-    (user) => user.userId === +query.userId,
-  );
-
   return EventsCollection.find().filter((event) => {
     return Object.values(TicketFilters).every((ticketFilterEnum) =>
       ticketFilterEnum.execute({
         event,
-        user,
         query,
       }),
     );

@@ -1,4 +1,10 @@
 import { getTicketsByQuery } from "./getTicketsByQuery.js";
+import { asyncLocalStorage } from "./asl.js";
+import { setUserFromRequest } from "./auth.js";
+
+function runInAsyncLocalStorageContext(callback) {
+  asyncLocalStorage.run(new Map(), callback);
+}
 
 const DATA = [
   {
@@ -24,8 +30,11 @@ const DATA = [
 describe("getTicketsByQuery", () => {
   DATA.forEach(({ input, expected, title }) => {
     test(`returns ${expected === 0 ? "no" : expected} events with ${title}`, () => {
-      const events = getTicketsByQuery(input);
-      expect(events.length).toBe(expected);
+      runInAsyncLocalStorageContext(() => {
+        setUserFromRequest({ query: input });
+        const events = getTicketsByQuery(input);
+        expect(events.length).toBe(expected);
+      });
     });
   });
 });

@@ -1,4 +1,5 @@
-import { createEnum } from "./createEnum";
+import { createEnum } from "./createEnum.js";
+import { getUserOrNull } from "./userAuth.js";
 
 const equals = (a, b) => {
   return a === b;
@@ -26,7 +27,8 @@ const defaultExecute = function (arg) {
   return executor({ ...arg, filterEnum: this });
 };
 
-const isVIPUser = ({ event, user }) => {
+const isVIPUser = ({ event }) => {
+  const user = getUserOrNull();
   return user?.isVIP || !event.onlyVIPUsers;
 };
 
