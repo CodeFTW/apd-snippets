@@ -1,3 +1,5 @@
+import { createEnum } from "./createEnum";
+
 const equals = (a, b) => {
   return a === b;
 };
@@ -12,49 +14,51 @@ const greaterOrEqualThan = (a, b) => {
 
 const executor = ({ query, event, filterEnum }) => {
   const propFromQuery = query[filterEnum.propName];
+  if (!propFromQuery) {
+    return true;
+  }
+
   const propFromEvent = event[filterEnum.propName];
-  return !propFromQuery || filterEnum.operator(propFromEvent, propFromQuery);
+  return filterEnum.operator(propFromEvent, propFromQuery);
 };
 
 const defaultExecute = function (arg) {
   return executor({ ...arg, filterEnum: this });
 };
-export const TicketFilters = {
-  BY_NAME: {
-    propName: "eventName",
-    isRequired: false,
-    operator: includes,
-    execute: defaultExecute,
-  },
-  BY_DATE: {
-    propName: "eventDate",
-    isRequired: false,
-    operator: equals,
-    execute: defaultExecute,
-  },
-  BY_TYPE: {
-    propName: "eventType",
-    isRequired: false,
-    operator: equals,
-    execute: defaultExecute,
-  },
-  BY_QUANTITY: {
-    propName: "quantity",
-    isRequired: true,
-    operator: greaterOrEqualThan,
-    execute: defaultExecute,
-  },
-  BY_STATUS: {
-    propName: "eventStatus",
-    isRequired: false,
-    operator: equals,
-    execute: defaultExecute,
-  },
-  BY_USER_VIP: {
-    propName: "onlyVIPUsers",
-    isRequired: false,
-    execute({ event, user }) {
-      return user?.isVIP || !event.onlyVIPUsers;
+
+const isVIPUser = ({ event, user }) => {
+  return user?.isVIP || !event.onlyVIPUsers;
+};
+
+export const TicketFilters = createEnum(
+  {
+    BY_NAME: {
+      propName: "eventName",
+      isRequired: false,
+      operator: includes,
+    },
+    BY_DATE: {
+      propName: "eventDate",
+      isRequired: false,
+    },
+    BY_TYPE: {
+      propName: "eventType",
+      isRequired: false,
+    },
+    BY_QUANTITY: {
+      propName: "quantity",
+      isRequired: true,
+      operator: greaterOrEqualThan,
+    },
+    BY_STATUS: {
+      propName: "eventStatus",
+      isRequired: false,
+    },
+    BY_USER_VIP: {
+      propName: "onlyVIPUsers",
+      isRequired: false,
+      execute: isVIPUser,
     },
   },
-};
+  { defaultFields: { execute: defaultExecute, operator: equals } },
+);
