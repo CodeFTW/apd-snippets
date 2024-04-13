@@ -1,20 +1,31 @@
 import { getTicketsByQuery } from "./getTicketsByQuery.js";
 
-describe("getTicketsByQuery", () => {
-  test("returns empty array when there are no events", () => {
-    const events = getTicketsByQuery({
+const DATA = [
+  {
+    title: "Con, 101 tickets, upcoming",
+    input: {
       eventName: "Con",
       quantity: 101,
       status: "upcoming",
-    });
-    expect(events.length).toBe(0);
-  });
-  test(`returns all events with "Con" for VIP User`, () => {
-    const events = getTicketsByQuery({
+    },
+    expected: 0,
+  },
+  {
+    title: "Con, 1 tickets for user 1",
+    input: {
       quantity: 1,
       userId: 1,
       eventName: "Con",
+    },
+    expected: 2,
+  },
+];
+
+describe("getTicketsByQuery", () => {
+  DATA.forEach(({ input, expected, title }) => {
+    test(`returns ${expected === 0 ? "no" : expected} events with ${title}`, () => {
+      const events = getTicketsByQuery(input);
+      expect(events.length).toBe(expected);
     });
-    expect(events.length).toBe(2);
   });
 });

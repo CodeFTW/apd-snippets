@@ -1,14 +1,16 @@
 import { TicketFilters } from "./TicketFilters.js";
 
+const DATA = [
+  { property: "isRequired" },
+  { property: "propName" },
+  { property: "execute" },
+];
 describe("TicketFilters", () => {
-    test("isRequired is present", () => {
-        Object.values(TicketFilters).forEach(({ isRequired }) => {
-            expect(isRequired).toBeDefined();
-        });
+  DATA.forEach(({ property }) => {
+    test(`${property} is present`, () => {
+      Object.values(TicketFilters).forEach((ticketFilter) => {
+        expect(ticketFilter[property]).toBeDefined();
+      });
     });
-    test("propName is present", () => {
-        Object.values(TicketFilters).forEach(({ propName }) => {
-            expect(propName).toBeDefined();
-        });
-    });
+  });
 });
